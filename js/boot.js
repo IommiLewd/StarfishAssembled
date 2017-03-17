@@ -1,4 +1,4 @@
-var game = new Phaser.Game(640, 384, Phaser.CANVAS, 'terraria');
+var game = new Phaser.Game(840, 560, Phaser.AUTO, 'phaser-example');
 class Boot extends Phaser.State {
 
     preload() {

@@ -1,21 +1,4 @@
-/**
- * base class for the player.
- * @constructor
- *  game : the phaser game.
- *  posx : his location in x.
- *  posy : his location in y.
- * @method toggleCombatMode
- *  change the player mode on Combat Mode.
- * @method reload
- *  TODO: reload the current weapon magazine
- * @property onLadder
- *  the player colliding with a ladder boolean.
- *  @getter : isOnLadder;
- *  @setTrue : setOnLadder;
- *  @reset : resetOnLadder
- * @method update :
- *
- */
+
 class Player extends Phaser.Sprite {
     constructor(game, posx, posy, key) {
         super(game, posx, posy, 'player', 0);
@@ -26,37 +9,20 @@ class Player extends Phaser.Sprite {
         this.body.drag.set(10);
         this._addEmitter();
 
-        this.body.maxAngular = 200;
-        this.angularDrag = 50;
-        this._pointerAngle = 0;
-        //this._laserPointer();
-        
+
+        this.SPEED = 250; // missile speed pixels/second
+        this.TURN_RATE = 5; // turn rate in degrees/frame
+
+
     }
 
 
     _addEmitter() {
-        
-        
-        
-        
-        
-        
-        
-//            this.emitter = game.add.emitter(0, 0, 200);
-//
-//    this.emitter.makeParticles('flame');
-//    this.emitter.minRotation = 0;
-//    this.emitter.maxRotation = 0;
-//    this.emitter.gravity = 0;
-//    this.emitter.bounce.setTo(0.5, 0.5);
-//        this.addChild(this.emitter);
-        
-        
-//        
+
         this.emitter = this.game.add.emitter(0, 0, 200);
         this.emitter.width = 0;
         this.emitter.makeParticles('flame');
-        
+
         this.emitter.maxParticleSpeed = new Phaser.Point(-100, 50);
         this.emitter.minParticleSpeed = new Phaser.Point(-200, -50);
         this.emitter.minParticleScale = 0.5;
@@ -66,51 +32,38 @@ class Player extends Phaser.Sprite {
         this.emitter.forEach(function (particle) {
             particle.body.allowGravity = true;
         }, this);
-        this.emitter.setScale(0.3, 2, 0.3, 2, 200);
-        this.emitter.start(false, 200, 1);
+        this.emitter.setScale(0.3, 2, 0.3, 2, 300);
+        this.emitter.start(false, 300, 1);
         this.addChild(this.emitter);
         this.emitter.on = false;
         this.emitter.y = 0;
         this.emitter.x = -8;
-        //this.emitter.enableBody = true;
-
     }
-
-
-        //@override
     update() {
-//     this.emitter.x = this.x;
-//        this.emitter.y = this.y;
-//        this.emitter.rotation = this.rotation
- //this._laserPointer.rotation = this.game.physics.arcade.angleToPointer(this);
-       // this._laserPointer.rotation - this.rotation;
-     
-        //this.rotation = this.game.physics.arcade.angleToPointer(this);
-//        this._laserPointer.x = this.x;
-//        this._laserPointer.y = this.y;
+        var targetAngle = this.game.math.angleBetween(
+            this.x, this.y,
+            this.game.input.activePointer.x, this.game.input.activePointer.y
+        );
+
+        var delta = targetAngle - this.rotation;
+        if (delta > Math.PI) delta -= Math.PI * 2;
+        if (delta < -Math.PI) delta += Math.PI * 2;
+
         if (this.game.input.activePointer.rightButton.isDown) {
             this.emitter.on = true;
-            this.game.physics.arcade.accelerationFromRotation(this.rotation, 80, this.body.acceleration);
-         this.rotation = this.game.physics.arcade.angleToPointer(this);
-            if (0 < this._pointerAngle) {
-                //this.body.angularAcceleration += 1800;
-                this.body.rotation += 1.1;
-                console.log('woof woof');
-            } else if (0 > this._pointerAngle) {
-                //this.body.angularAcceleration -= 1800;
-                this.body.rotation -= 1.1;
-                console.log('Bark Bark');
+            this.game.physics.arcade.accelerationFromRotation(this.rotation, 180, this.body.acceleration);
+
+            if (delta > 0) {
+                this.angle += 2;
             } else {
-                this.body.angularAcceleration = 0;
-
+                this.angle -= 2;
             }
-
+            console.log('Delta is:  ' + delta);
         } else {
             this.body.acceleration.set(0);
             this.emitter.on = false;
         }
-        
-      //     this._calculateAngle();
+
 
     }
 }

@@ -35,29 +35,53 @@ class Player extends Phaser.Sprite {
 
 
     _addEmitter() {
+        
+        
+        
+        
+        
+        
+        
+//            this.emitter = game.add.emitter(0, 0, 200);
+//
+//    this.emitter.makeParticles('flame');
+//    this.emitter.minRotation = 0;
+//    this.emitter.maxRotation = 0;
+//    this.emitter.gravity = 0;
+//    this.emitter.bounce.setTo(0.5, 0.5);
+//        this.addChild(this.emitter);
+        
+        
+//        
         this.emitter = this.game.add.emitter(0, 0, 200);
         this.emitter.width = 0;
         this.emitter.makeParticles('flame');
+        
         this.emitter.maxParticleSpeed = new Phaser.Point(-100, 50);
         this.emitter.minParticleSpeed = new Phaser.Point(-200, -50);
         this.emitter.minParticleScale = 0.5;
         this.emitter.maxParticleScale = 0.9;
-        this.emitter.setRotation(0, 50);
+        this.emitter.setRotation(0, 90);
         this.emitter.setAlpha(0.1, 0.6);
         this.emitter.forEach(function (particle) {
-            particle.body.allowGravity = false;
+            particle.body.allowGravity = true;
         }, this);
-        this.emitter.start(false, 500, 5);
+        this.emitter.setScale(0.3, 2, 0.3, 2, 200);
+        this.emitter.start(false, 200, 1);
         this.addChild(this.emitter);
         this.emitter.on = false;
         this.emitter.y = 0;
         this.emitter.x = -8;
+        //this.emitter.enableBody = true;
 
     }
 
 
         //@override
     update() {
+//     this.emitter.x = this.x;
+//        this.emitter.y = this.y;
+//        this.emitter.rotation = this.rotation
  //this._laserPointer.rotation = this.game.physics.arcade.angleToPointer(this);
        // this._laserPointer.rotation - this.rotation;
      

@@ -1,6 +1,6 @@
-class Weapon extends Phaser.Sprite {
-    constructor(game, posx, posy, key) {
-        super(game, posx, posy, 'player', 0);
+class UserInterface extends Phaser.Sprite {
+    constructor(game) {
+        super(game);
         game.add.existing(this);
         game.physics.arcade.enable(this);
         this.body.collideWorldBounds = true;

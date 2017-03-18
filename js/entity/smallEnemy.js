@@ -9,7 +9,7 @@ class smallEnemy extends Phaser.Sprite {
         this._addEmitter();
 //        this._addGun();
         this.SPEED = 60; // missile speed pixels/second
-        this.TURN_RATE = 3; // turn rate in degrees/frame
+        this.TURN_RATE = 1; // turn rate in degrees/frame
         this.playerX = 100;
         this.playerY = 100;
         this.body.bounce.set(0.4);

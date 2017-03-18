@@ -6,16 +6,16 @@ class SimpleLevel extends Phaser.State {
     }
 
     _loadLevel() {
-        
+
         this.game.canvas.oncontextmenu = function (e) {
-            e.preventDefault();
-        }
-        this.game.world.setBounds(0, 0, 840, 560);
-        this.tilesprite = game.add.tileSprite(0, 0, 840, 560, 'background');
+                e.preventDefault();
+            }
+            //        this.game.world.setBounds(0, 0, 840, 560);
+            //        this.tilesprite = game.add.tileSprite(0, 0, 840, 560, 'background');
 
 
-        //        this.game.world.setBounds(0, 0, 840, 560);
-        //        this.tilesprite = game.add.tileSprite(0, 0, 840, 560, 'background');
+        this.game.world.setBounds(0, 0, 920, 640);
+        this.tilesprite = game.add.tileSprite(0, 0, 920, 640, 'background');
     }
 
     _addPlayer(x, y) {
@@ -23,18 +23,18 @@ class SimpleLevel extends Phaser.State {
         this.game.camera.follow(this.player);
     }
 
-    _addEnemy(){
-                this.enemy = new smallEnemy(this.game, 100, 100, 'player');
+    _addEnemy() {
+        this.enemy = new smallEnemy(this.game, 100, 100, 'player');
     }
 
     _laserPointer() {
-        this._laserPointer = this.game.add.tileSprite(0, 0, 800, 0.5, 'pointer');
+        this._laserPointer = this.game.add.tileSprite(0, 0, 920, 0.5, 'pointer');
         this._laserPointer.anchor.setTo(0.0, 0.5);
         this._laserPointer.alpha = 0.7;
 
     }
-    
-    
+
+
 
 
 
@@ -69,14 +69,14 @@ class SimpleLevel extends Phaser.State {
     }
 
     _checkCollision() {
-    this.game.physics.arcade.collide(this.player, this.enemy);
+            this.game.physics.arcade.collide(this.player, this.enemy);
         }
         //public methods :
         //@override:
     preload() {}
 
     create() {
-    
+
 
         //set the physics
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -87,26 +87,29 @@ class SimpleLevel extends Phaser.State {
         this.fireRate = 140;
         this._nextFire = 0;
         this._addEnemy();
-    
-        
+
+
     }
 
     update() {
         this._checkCollision();
-          this.enemy.playerX = this.player.x;
+
+        //enemyAI updater
+        this.enemy.playerX = this.player.x;
         this.enemy.playerY = this.player.y;
+
         this._laserPointer.rotation = this.game.physics.arcade.angleToPointer(this.player);
         this._laserPointer.x = this.player.x;
         this._laserPointer.y = this.player.y;
 
-        
-        
-            
+
+        //        this.player.gun.angle = this._laserPointer.angle;
+
         if (this.game.input.activePointer.leftButton.isDown) {
             this._fireWeapon();
         }
     }
-    
-    
+
+
 
 }

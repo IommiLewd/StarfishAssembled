@@ -10,7 +10,7 @@ class Player extends Phaser.Sprite {
         this._addGun();
         this.SPEED = 140; // missile speed pixels/second
         this.TURN_RATE = 3; // turn rate in degrees/frame
-       this.body.bounce.set(0.4);
+        this.body.bounce.set(0.4);
     }
 
     _addEmitter() {
@@ -32,14 +32,18 @@ class Player extends Phaser.Sprite {
         this.emitter.on = false;
         this.emitter.y = 0;
         this.emitter.x = -6;
+        //this.emitter.tween.to({ tint: 0x757575 }, 300, Phaser.Easing.Linear.None);
     }
-    _addGun(){
+    _addGun() {
         this.gun = this.game.add.image(0, 0, 'gun');
         this.gun.anchor.setTo(0.5);
-        this.addChild(this.gun);
+        //this.addChild(this.gun);
     }
 
     update() {
+        this.gun.x = this.x;
+        this.gun.y = this.y;
+        //this.game.physics.arcade.angleToPointer(this.gun);
         this.gun.rotation = this.game.physics.arcade.angleToPointer(this);
         var targetAngle = this.game.math.angleBetween(
             this.x, this.y,
@@ -67,4 +71,3 @@ class Player extends Phaser.Sprite {
 
     }
 }
-

@@ -10,7 +10,7 @@ class Player extends Phaser.Sprite {
         this._addGun();
         this.SPEED = 140; // missile speed pixels/second
         this.TURN_RATE = 3; // turn rate in degrees/frame
-       
+       this.body.bounce.set(0.4);
     }
 
     _addEmitter() {

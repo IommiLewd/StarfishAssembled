@@ -1,4 +1,4 @@
-class Enemy extends Phaser.Sprite {
+class smallEnemy extends Phaser.Sprite {
     constructor(game, posx, posy, key) {
         super(game, posx, posy, 'player', 0);
         game.add.existing(this);
@@ -12,6 +12,7 @@ class Enemy extends Phaser.Sprite {
         this.TURN_RATE = 3; // turn rate in degrees/frame
         this.playerX = 100;
         this.playerY = 100;
+        this.body.bounce.set(0.4);
        
     }
 
@@ -35,11 +36,7 @@ class Enemy extends Phaser.Sprite {
         this.emitter.y = 0;
         this.emitter.x = -6;
     }
-//    _addGun(){
-//        this.gun = this.game.add.image(0, 0, 'gun');
-//        this.gun.anchor.setTo(0.5);
-//        this.addChild(this.gun);
-//    }
+
 
     update() {
         this.targetDistance = this.game.math.distance(this.x, this.y, this.playerX, this.playerY);

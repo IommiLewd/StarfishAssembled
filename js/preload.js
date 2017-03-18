@@ -17,7 +17,7 @@ class Preload extends Phaser.State {
         // js scripts :
         this.load.script('player', 'js/entity/player.js');
         this.load.script('simpleLevel', 'js/map/simplelevel.js');
-        this.load.script('Enemy', 'js/entity/enemy.js');
+        this.load.script('smallEnemy', 'js/entity/smallEnemy.js');
 
         // json files :
          this.load.image('pointer', 'img/laserPointer.png');

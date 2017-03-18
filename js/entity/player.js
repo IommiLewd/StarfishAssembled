@@ -22,7 +22,7 @@ class Player extends Phaser.Sprite {
         this.emitter.minParticleScale = 0.5;
         this.emitter.maxParticleScale = 8.9;
         this.emitter.setRotation(0, 190);
-        this.emitter.setAlpha(0.1, 0.6);
+        this.emitter.setAlpha(0.1, 0.3);
         this.emitter.forEach(function (particle) {
             particle.body.allowGravity = false;
         }, this);
@@ -32,7 +32,9 @@ class Player extends Phaser.Sprite {
         this.emitter.on = false;
         this.emitter.y = 0;
         this.emitter.x = -6;
-        //this.emitter.tween.to({ tint: 0x757575 }, 300, Phaser.Easing.Linear.None);
+
+
+
     }
     _addGun() {
         this.gun = this.game.add.image(0, 0, 'gun');

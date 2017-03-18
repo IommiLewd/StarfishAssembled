@@ -9,7 +9,7 @@ class smallEnemy extends Phaser.Sprite {
         this._addEmitter();
 //        this._addGun();
         this.SPEED = 60; // missile speed pixels/second
-        this.TURN_RATE = 1; // turn rate in degrees/frame
+        this.TURN_RATE = 3; // turn rate in degrees/frame
         this.playerX = 100;
         this.playerY = 100;
         this.body.bounce.set(0.4);
@@ -40,9 +40,9 @@ class smallEnemy extends Phaser.Sprite {
 
     update() {
         this.targetDistance = this.game.math.distance(this.x, this.y, this.playerX, this.playerY);
-        console.log('targetDistance is' + this.targetDistance);
-      
-     console.log('playerX is: ' + this.playerX  + '  playerY is: ' + this.playerY);
+//        console.log('targetDistance is' + this.targetDistance);
+//      
+//     console.log('playerX is: ' + this.playerX  + '  playerY is: ' + this.playerY);
         var targetAngle = this.game.math.angleBetween(
             this.x, this.y,
             this.playerX, this.playerY

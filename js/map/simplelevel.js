@@ -12,8 +12,6 @@ class SimpleLevel extends Phaser.State {
             }
             //        this.game.world.setBounds(0, 0, 840, 560);
             //        this.tilesprite = game.add.tileSprite(0, 0, 840, 560, 'background');
-
-
         this.game.world.setBounds(0, 0, 920, 640);
         this.tilesprite = game.add.tileSprite(0, 0, 920, 640, 'background');
     }
@@ -24,28 +22,26 @@ class SimpleLevel extends Phaser.State {
     }
 
     _addEnemy() {
-        this.enemy = new smallEnemy(this.game, 100, 100, 'player');
+        this.enemy = new smallEnemy(this.game, 820, 100, 'player');
     }
 
     _laserPointer() {
         this._laserPointer = this.game.add.tileSprite(0, 0, 920, 0.5, 'pointer');
         this._laserPointer.anchor.setTo(0.0, 0.5);
         this._laserPointer.alpha = 0.7;
-
     }
-
-
-
-
+    
+    _loadUi(){
+        this.userInterface = new UserInterface(this.game);
+    }
 
     _fireWeapon() {
         this.bullet;
         if (this.game.time.now > this._nextFire) {
-            console.log('fired!');
             this._nextFire = this.game.time.now + this.fireRate;
             this.bullet = this.bullets.getFirstDead();
             this.bullet.reset(this.player.x, this.player.y);
-            this.game.camera.shake(0.007, 70);
+            this.game.camera.shake(0.004, 40);
             this.game.physics.arcade.velocityFromAngle(this._laserPointer.angle, 1100, this.bullet.body.velocity);
             this.bullet.angle = this._laserPointer.angle;
             this.bullet.bringToTop();
@@ -76,8 +72,6 @@ class SimpleLevel extends Phaser.State {
     preload() {}
 
     create() {
-
-
         //set the physics
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this._loadLevel();
@@ -87,8 +81,7 @@ class SimpleLevel extends Phaser.State {
         this.fireRate = 140;
         this._nextFire = 0;
         this._addEnemy();
-
-
+        this._loadUi();
     }
 
     update() {
@@ -101,10 +94,6 @@ class SimpleLevel extends Phaser.State {
         this._laserPointer.rotation = this.game.physics.arcade.angleToPointer(this.player);
         this._laserPointer.x = this.player.x;
         this._laserPointer.y = this.player.y;
-
-
-        //        this.player.gun.angle = this._laserPointer.angle;
-
         if (this.game.input.activePointer.leftButton.isDown) {
             this._fireWeapon();
         }

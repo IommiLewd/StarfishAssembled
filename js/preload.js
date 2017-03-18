@@ -8,7 +8,8 @@ class Preload extends Phaser.State {
         this.load.image('player', 'img/playerTemplate.png');
         //this.load.image('pointer', 'img/pointer.png');
         this.load.image('flame', 'img/flame.png');
-        this.load.image('background', 'img/tileableBackground.jpg');
+       // this.load.image('background', 'img/tileableBackground.jpg');
+        this.load.image('background', 'img/testBackground.png');
 
 
         // js scripts :

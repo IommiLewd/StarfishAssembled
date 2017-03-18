@@ -1,4 +1,4 @@
-class Player extends Phaser.Sprite {
+class Enemy extends Phaser.Sprite {
     constructor(game, posx, posy, key) {
         super(game, posx, posy, 'player', 0);
         game.add.existing(this);
@@ -7,9 +7,11 @@ class Player extends Phaser.Sprite {
         this.anchor.setTo(0.5, 0.5);
         this.body.drag.set(0.5);
         this._addEmitter();
-        this._addGun();
-        this.SPEED = 140; // missile speed pixels/second
+//        this._addGun();
+        this.SPEED = 60; // missile speed pixels/second
         this.TURN_RATE = 3; // turn rate in degrees/frame
+        this.playerX = 100;
+        this.playerY = 100;
        
     }
 
@@ -33,38 +35,43 @@ class Player extends Phaser.Sprite {
         this.emitter.y = 0;
         this.emitter.x = -6;
     }
-    _addGun(){
-        this.gun = this.game.add.image(0, 0, 'gun');
-        this.gun.anchor.setTo(0.5);
-        this.addChild(this.gun);
-    }
+//    _addGun(){
+//        this.gun = this.game.add.image(0, 0, 'gun');
+//        this.gun.anchor.setTo(0.5);
+//        this.addChild(this.gun);
+//    }
 
     update() {
-        this.gun.rotation = this.game.physics.arcade.angleToPointer(this);
+        this.targetDistance = this.game.math.distance(this.x, this.y, this.playerX, this.playerY);
+        console.log('targetDistance is' + this.targetDistance);
+      
+     console.log('playerX is: ' + this.playerX  + '  playerY is: ' + this.playerY);
         var targetAngle = this.game.math.angleBetween(
             this.x, this.y,
-            this.game.input.activePointer.x, this.game.input.activePointer.y
+            this.playerX, this.playerY
         );
 
         var delta = targetAngle - this.rotation;
         if (delta > Math.PI) delta -= Math.PI * 2;
         if (delta < -Math.PI) delta += Math.PI * 2;
 
-        if (this.game.input.activePointer.rightButton.isDown) {
-            this.emitter.on = true;
+          
+        if(this.targetDistance > 120){
             this.game.physics.arcade.accelerationFromRotation(this.rotation, this.SPEED, this.body.acceleration);
-
+              this.emitter.on = true;
+         } else {
+             this.emitter.on = false;
+         }
+        
             if (delta > 0) {
                 this.angle += this.TURN_RATE;
             } else {
                 this.angle -= this.TURN_RATE;
             }
-        } else {
-            this.body.acceleration.set(0);
-            this.emitter.on = false;
+    
         }
 
 
     }
-}
+
 

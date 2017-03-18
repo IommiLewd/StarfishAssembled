@@ -5,7 +5,9 @@ class Preload extends Phaser.State {
 
         // Images :
    
-        this.load.image('player', 'img/playerTemplate.png');
+        this.load.image('player', 'img/Badger.png');
+        this.load.image('bullet', 'img/bullet.png');
+        this.load.image('gun', 'img/gun.png');
         //this.load.image('pointer', 'img/pointer.png');
         this.load.image('flame', 'img/flame.png');
        // this.load.image('background', 'img/tileableBackground.jpg');
@@ -15,6 +17,7 @@ class Preload extends Phaser.State {
         // js scripts :
         this.load.script('player', 'js/entity/player.js');
         this.load.script('simpleLevel', 'js/map/simplelevel.js');
+        this.load.script('Enemy', 'js/entity/enemy.js');
 
         // json files :
          this.load.image('pointer', 'img/laserPointer.png');

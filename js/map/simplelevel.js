@@ -24,7 +24,9 @@ class SimpleLevel extends Phaser.State {
     }
 
     _addEnemy() {
+        this.enemies = this.game.add.group();
         this.enemy = new smallEnemy(this.game, 820, 100, 'player');
+        this.enemies.add(this.enemy);
     }
 
     _laserPointer() {
@@ -38,9 +40,19 @@ class SimpleLevel extends Phaser.State {
     }
 
 
-    _enemy_hit(enemy, bullet) {
+    _enemy_hit(bullet, enemy) {
         console.log('enemyHit!');
         bullet.destroy();
+        enemy.body.velocity.x = 10;
+        enemy.body.velocity.y = 10;
+        this.explosion.x = enemy.x;
+        this.explosion.y = enemy.y;
+        this.explosion.on = true;
+        this.game.time.events.add(Phaser.Timer.SECOND * 0.3, this._endExplosion, this);
+    }
+
+    _endExplosion() {
+        this.explosion.on = false;
     }
 
     _fireWeapon() {
@@ -50,9 +62,10 @@ class SimpleLevel extends Phaser.State {
             this.bullet = this.bullets.getFirstDead();
             this.bullet.reset(this.player.x, this.player.y);
             this.game.camera.shake(0.004, 40);
-            this.game.physics.arcade.velocityFromAngle(this._laserPointer.angle, 1200, this.bullet.body.velocity);
+            this.game.physics.arcade.velocityFromAngle(this._laserPointer.angle, 800, this.bullet.body.velocity);
             this.bullet.angle = this._laserPointer.angle;
             this.bullet.bringToTop();
+            
             this.bullets.add(this.bullet);
         }
     }
@@ -72,27 +85,39 @@ class SimpleLevel extends Phaser.State {
         })
     }
 
-    _checkCollision() {
-            this.game.physics.arcade.collide(this.player, this.enemy);
-            //this.game.physics.arcade.collide(this.bullets, this.enemy);
-            this.game.physics.arcade.collide(this.bullets, this.enemy, this._enemy_hit, null, this);
+    _addExplosion() {
+        this.explosion = this.game.add.emitter(0, 0, 200);
+        this.explosion.width = 0;
+        this.explosion.makeParticles('blueFlame');
+        this.explosion.minParticleSpeed.setTo(-200, -200);
+        this.explosion.maxParticleSpeed.setTo(200, 200);
+        this.explosion.setRotation(0, 190);
+        this.explosion.setAlpha(0.1, 1);
+        this.explosion.forEach(function (particle) {
+            particle.body.allowGravity = false;
+        }, this);
+        this.explosion.setScale(0.3, 1, 0.3, 1, 220);
+        this.explosion.start(false, 220, 1);
+        this.explosion.on = false;
+    }
 
-        }
-        //public methods :
-        //@override:
+    _checkCollision() {
+        this.game.physics.arcade.collide(this.player, this.enemies);
+        this.game.physics.arcade.collide(this.bullets, this.enemies, this._enemy_hit, null, this);
+
+    }
     preload() {}
 
     create() {
-        //set the physics
-        
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this._loadLevel();
         this._addPlayer(100, 100);
         this._laserPointer();
         this._initBullets();
-        this.fireRate = 20;
+        this.fireRate = 420;
         this._nextFire = 0;
         this._addEnemy();
+        this._addExplosion();
         //this._loadUi();
     }
 

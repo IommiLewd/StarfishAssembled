@@ -33,9 +33,10 @@ class Player extends Phaser.Sprite {
         this.emitter.y = 0;
         this.emitter.x = -6;
 
-
-
     }
+
+    
+    
     _addGun() {
         this.gun = this.game.add.image(0, 0, 'gun');
         this.gun.anchor.setTo(0.5);

@@ -6,14 +6,16 @@ class SimpleLevel extends Phaser.State {
     }
 
     _loadLevel() {
-
+        console.log('simplelevel.js: -> _LoadLevel fired');
         this.game.canvas.oncontextmenu = function (e) {
                 e.preventDefault();
             }
             //        this.game.world.setBounds(0, 0, 840, 560);
             //        this.tilesprite = game.add.tileSprite(0, 0, 840, 560, 'background');
+
         this.game.world.setBounds(0, 0, 920, 640);
-        this.tilesprite = game.add.tileSprite(0, 0, 920, 640, 'background');
+        this.background = game.add.tileSprite(0, 0, 920, 640, 'background');
+        this.overlay = game.add.tileSprite(-300, -300, 1020, 740, 'Overlay');
     }
 
     _addPlayer(x, y) {
@@ -26,13 +28,19 @@ class SimpleLevel extends Phaser.State {
     }
 
     _laserPointer() {
-        this._laserPointer = this.game.add.tileSprite(0, 0, 920, 0.5, 'pointer');
+        this._laserPointer = this.game.add.tileSprite(0, 0, 1100, 0.5, 'pointer');
         this._laserPointer.anchor.setTo(0.0, 0.5);
         this._laserPointer.alpha = 0.7;
     }
-    
-    _loadUi(){
+
+    _loadUi() {
         this.userInterface = new UserInterface(this.game);
+    }
+
+
+    _enemy_hit(enemy, bullet) {
+        console.log('enemyHit!');
+        bullet.destroy();
     }
 
     _fireWeapon() {
@@ -42,7 +50,7 @@ class SimpleLevel extends Phaser.State {
             this.bullet = this.bullets.getFirstDead();
             this.bullet.reset(this.player.x, this.player.y);
             this.game.camera.shake(0.004, 40);
-            this.game.physics.arcade.velocityFromAngle(this._laserPointer.angle, 1100, this.bullet.body.velocity);
+            this.game.physics.arcade.velocityFromAngle(this._laserPointer.angle, 1200, this.bullet.body.velocity);
             this.bullet.angle = this._laserPointer.angle;
             this.bullet.bringToTop();
             this.bullets.add(this.bullet);
@@ -66,6 +74,9 @@ class SimpleLevel extends Phaser.State {
 
     _checkCollision() {
             this.game.physics.arcade.collide(this.player, this.enemy);
+            //this.game.physics.arcade.collide(this.bullets, this.enemy);
+            this.game.physics.arcade.collide(this.bullets, this.enemy, this._enemy_hit, null, this);
+
         }
         //public methods :
         //@override:
@@ -73,18 +84,21 @@ class SimpleLevel extends Phaser.State {
 
     create() {
         //set the physics
+        
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this._loadLevel();
         this._addPlayer(100, 100);
         this._laserPointer();
         this._initBullets();
-        this.fireRate = 140;
+        this.fireRate = 20;
         this._nextFire = 0;
         this._addEnemy();
-        this._loadUi();
+        //this._loadUi();
     }
 
     update() {
+        this.overlay.x = this.player.x * 0.12 - 100;
+        this.overlay.y = this.player.y * 0.12 - 100;
         this._checkCollision();
 
         //enemyAI updater
@@ -98,7 +112,5 @@ class SimpleLevel extends Phaser.State {
             this._fireWeapon();
         }
     }
-
-
 
 }

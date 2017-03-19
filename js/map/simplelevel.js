@@ -27,9 +27,9 @@ class SimpleLevel extends Phaser.State {
         this.enemies = this.game.add.group();
         this.enemy = new smallEnemy(this.game, 820, 100, 'player');
         this.enemies.add(this.enemy);
-        
-        
-             this.enemy = new smallEnemy(this.game, 820, 300, 'player');
+
+
+        this.enemy = new smallEnemy(this.game, 820, 300, 'player');
         this.enemies.add(this.enemy);
     }
 
@@ -47,8 +47,16 @@ class SimpleLevel extends Phaser.State {
     _enemy_hit(bullet, enemy) {
         console.log('enemyHit!');
         bullet.kill();
-        enemy.body.velocity.x = 10;
-        enemy.body.velocity.y = 10;
+        enemy.body.velocity.x = bullet.body.velocity.x / 10;
+        enemy.body.velocity.y = bullet.body.velocity.y / 10;
+
+
+
+
+
+
+//        enemy.body.velocity.x = 10;
+//        enemy.body.velocity.y = 10;
         this.explosion.x = enemy.x;
         this.explosion.y = enemy.y;
         this.explosion.on = true;
@@ -66,7 +74,7 @@ class SimpleLevel extends Phaser.State {
             this.bullet = this.bullets.getFirstDead();
             this.bullet.reset(this.player.x, this.player.y);
             this.game.camera.shake(0.004, 40);
-            this.game.physics.arcade.velocityFromAngle(this._laserPointer.angle, 800, this.bullet.body.velocity);
+            this.game.physics.arcade.velocityFromAngle(this._laserPointer.angle, 1100, this.bullet.body.velocity);
             this.bullet.angle = this._laserPointer.angle;
             this.bullet.bringToTop();
 
@@ -113,14 +121,14 @@ class SimpleLevel extends Phaser.State {
     _aiUpdater() {
         var storedX = this.player.x;
         var storedY = this.player.y;
-        this.enemies.forEach(function (enemy, player) {
+        this.enemies.forEach(function (enemy) {
             enemy.playerX = storedX;
             enemy.playerY = storedY;
         }, this)
-        
-        
-//          this.enemy.playerX = this.player.x;
-//            this.enemy.playerY = this.player.y;
+
+
+        //          this.enemy.playerX = this.player.x;
+        //            this.enemy.playerY = this.player.y;
     }
     preload() {}
 
@@ -130,7 +138,7 @@ class SimpleLevel extends Phaser.State {
         this._addPlayer(100, 100);
         this._laserPointer();
         this._initBullets();
-        this.fireRate = 320;
+        this.fireRate = 120;
         this._nextFire = 0;
         this._addEnemy();
         this._addExplosion();
@@ -138,15 +146,15 @@ class SimpleLevel extends Phaser.State {
     }
 
     update() {
-        
-          this._aiUpdater();
+
+        this._aiUpdater();
         this.overlay.x = this.player.x * 0.12 - 100;
         this.overlay.y = this.player.y * 0.12 - 100;
         this._checkCollision();
 
         //enemyAI updater
 
-      
+
 
 
         this._laserPointer.rotation = this.game.physics.arcade.angleToPointer(this.player);

@@ -7,13 +7,15 @@ class smallEnemy extends Phaser.Sprite {
         this.anchor.setTo(0.5, 0.5);
         this.body.drag.set(0.5);
         this._addEmitter();
-//        this._addGun();
-        this.SPEED = 160; // missile speed pixels/second
-        this.TURN_RATE = 2; // turn rate in degrees/frame
+        //        this._addGun();
+        var randTurn = Math.random() * (4 - 1.5) + 1.5;
+        var randSpeed = Math.random() * (180 - 120) + 120;
+        this.SPEED = randSpeed; // missile speed pixels/second
+        this.TURN_RATE = randTurn; // turn rate in degrees/frame
         this.playerX = 100;
         this.playerY = 100;
         this.body.bounce.set(0.4);
-       
+
     }
 
     _addEmitter() {
@@ -40,9 +42,9 @@ class smallEnemy extends Phaser.Sprite {
 
     update() {
         this.targetDistance = this.game.math.distance(this.x, this.y, this.playerX, this.playerY);
-//        console.log('targetDistance is' + this.targetDistance);
-//      
-//     console.log('playerX is: ' + this.playerX  + '  playerY is: ' + this.playerY);
+        //        console.log('targetDistance is' + this.targetDistance);
+        //      
+        //     console.log('playerX is: ' + this.playerX  + '  playerY is: ' + this.playerY);
         var targetAngle = this.game.math.angleBetween(
             this.x, this.y,
             this.playerX, this.playerY
@@ -52,23 +54,21 @@ class smallEnemy extends Phaser.Sprite {
         if (delta > Math.PI) delta -= Math.PI * 2;
         if (delta < -Math.PI) delta += Math.PI * 2;
 
-          
-        if(this.targetDistance > 120){
+
+        if (this.targetDistance > 120) {
             this.game.physics.arcade.accelerationFromRotation(this.rotation, this.SPEED, this.body.acceleration);
-              this.emitter.on = true;
-         } else {
-             this.emitter.on = false;
-         }
-        
-            if (delta > 0) {
-                this.angle += this.TURN_RATE;
-            } else {
-                this.angle -= this.TURN_RATE;
-            }
-    
+            this.emitter.on = true;
+        } else {
+            this.emitter.on = false;
         }
 
+        if (delta > 0) {
+            this.angle += this.TURN_RATE;
+        } else {
+            this.angle -= this.TURN_RATE;
+        }
 
     }
 
 
+}

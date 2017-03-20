@@ -11,10 +11,12 @@ class Preload extends Phaser.State {
         this.load.image('statusUi', 'img/Ui/statusUi.png');
         //this.load.image('pointer', 'img/pointer.png');
         this.load.image('flame', 'img/flame.png');
-        this.load.image('blueFlame', 'img/blueFlame.png');
+       // this.load.image('blueFlame', 'img/blueFlame.png');
        // this.load.image('background', 'img/tileableBackground.jpg');
         this.load.image('background', 'img/testBackground.png');
         this.load.image('Overlay', 'img/testOverlay.png');
+        this.load.spritesheet('blueFlame', 'img/blueFlameSpritesheet.png', 10, 10, 3);
+        this.load.spritesheet('redFlame', 'img/blueFlameSpritesheet.png', 10, 10, 3);
 
 
         // js scripts :

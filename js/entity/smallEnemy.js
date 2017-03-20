@@ -30,6 +30,7 @@ class smallEnemy extends Phaser.Sprite {
         this.emitter.setAlpha(0.1, 0.6);
         this.emitter.forEach(function (particle) {
             particle.body.allowGravity = false;
+            
         }, this);
         this.emitter.setScale(0.3, 2, 0.3, 2, 200);
         this.emitter.start(false, 200, 1);

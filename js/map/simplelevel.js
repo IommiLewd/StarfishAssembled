@@ -107,6 +107,20 @@ class SimpleLevel extends Phaser.State {
         this.explosion.setAlpha(0.1, 1);
         this.explosion.forEach(function (particle) {
             particle.body.allowGravity = false;
+            
+            
+                    particle.animations.add('emit1', [0]);
+            particle.animations.add('emit2', [1]);
+            particle.animations.add('emit3', [2]);
+            var randSpeed = Math.random() * (4 - 0) + 0;
+            var randSpeed = Math.floor(randSpeed);
+
+            if (randSpeed === 1) {
+                particle.animations.play('emit1', 30, true);
+            } else if (randSpeed === 2) {
+                particle.animations.play('emit2', 30, true);
+            } else {particle.animations.play('emit3', 30, true);}
+            
         }, this);
         this.explosion.setScale(0.3, 1, 0.3, 1, 160);
         this.explosion.start(false, 160, 1);

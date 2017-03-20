@@ -16,15 +16,32 @@ class Player extends Phaser.Sprite {
     _addEmitter() {
         this.emitter = this.game.add.emitter(0, 0, 200);
         this.emitter.width = 0;
-        this.emitter.makeParticles('flame');
+        this.emitter.makeParticles('blueFlame');
         this.emitter.maxParticleSpeed = new Phaser.Point(-100, 50);
         this.emitter.minParticleSpeed = new Phaser.Point(-200, -50);
         this.emitter.minParticleScale = 0.5;
         this.emitter.maxParticleScale = 8.9;
-        this.emitter.setRotation(0, 190);
-        this.emitter.setAlpha(0.1, 0.3);
+        this.emitter.setRotation(0, 360);
+        //this.emitter.setAlpha(0.1, 0.8);
+        this.emitter.setAlpha(1, 0.1, 300);
         this.emitter.forEach(function (particle) {
-            particle.body.allowGravity = false;
+            
+            
+            //Yay, totally works and is cool. Can i reduce this to 3lines ov code?
+            
+            particle.animations.add('emit1', [0]);
+            particle.animations.add('emit2', [1]);
+            particle.animations.add('emit3', [2]);
+            var randSpeed = Math.random() * (4 - 0) + 0;
+            var randSpeed = Math.floor(randSpeed);
+
+            if (randSpeed === 1) {
+                particle.animations.play('emit1', 30, true);
+            } else if (randSpeed === 2) {
+                particle.animations.play('emit2', 30, true);
+            } else {particle.animations.play('emit3', 30, true);}
+            
+            
         }, this);
         this.emitter.setScale(0.3, 2, 0.3, 2, 200);
         this.emitter.start(false, 200, 1);
@@ -35,8 +52,8 @@ class Player extends Phaser.Sprite {
 
     }
 
-    
-    
+
+
     _addGun() {
         this.gun = this.game.add.image(0, 0, 'gun');
         this.gun.anchor.setTo(0.5);

@@ -6,7 +6,6 @@ class smallEnemy extends Phaser.Sprite {
         this.body.collideWorldBounds = true;
         this.anchor.setTo(0.5, 0.5);
         this.body.drag.set(0.5);
-        
         this._addEmitter();
         var randTurn = Math.random() * (2.0 - 1.5) + 1.5;
         var randSpeed = Math.random() * (140 - 120) + 120;
@@ -37,7 +36,7 @@ class smallEnemy extends Phaser.Sprite {
             this.alive = false;
             this.emitter.on = false;
             this._deathEmitter();
-            this.game.time.events.add(Phaser.Timer.SECOND * 4, function(){this.kill();}, this);
+            this.game.time.events.add(Phaser.Timer.SECOND * 4, function(){this.destroy();}, this);
             
         }
     }
@@ -51,7 +50,7 @@ class smallEnemy extends Phaser.Sprite {
         this._nextFire = this.game.time.now + this.fireRate;
         this.bullet = this.bullets.getFirstDead();
         this.bullet.reset(this.x, this.y);
-        this.game.camera.shake(0.004, 40);
+       
         this.game.physics.arcade.velocityFromAngle(this.angle, 900, this.bullet.body.velocity);
         this.bullet.angle = this.angle;
         this.bullet.bringToTop();

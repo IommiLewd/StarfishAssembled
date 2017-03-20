@@ -56,8 +56,9 @@ class Player extends Phaser.Sprite {
         this.gun.anchor.setTo(0.5);
     }
     
-    _death(){
-        
+    _playerDeath(){
+        this.gun.destroy();
+        this.emitter.on = false;
     }
 
     update() {

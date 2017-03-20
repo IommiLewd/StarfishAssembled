@@ -27,6 +27,7 @@ class SimpleLevel extends Phaser.State {
         this.enemies.add(this.enemy);
     }
 
+
     _laserPointer() {
         this._laserPointer = this.game.add.tileSprite(0, 0, 1100, 0.5, 'pointer');
         this._laserPointer.anchor.setTo(0.0, 0.5);
@@ -35,9 +36,10 @@ class SimpleLevel extends Phaser.State {
 
     _loadUi() {
         this.userInterface = new UserInterface(this.game);
+
     }
     _enemy_hit(bullet, enemy) {
-       
+
         bullet.kill();
         enemy._damageTaken(16);
         enemy.body.velocity.x = bullet.body.velocity.x / 16;
@@ -46,19 +48,28 @@ class SimpleLevel extends Phaser.State {
         this.explosion.y = enemy.y;
         this.explosion.on = true;
         this.game.time.events.add(Phaser.Timer.SECOND * 0.3, this._endExplosion, this);
-        if(enemy.health < 16 && enemy.alive){
+        if (enemy.health < 16 && enemy.alive) {
             this.userInterface._updateScore(20);
         }
     }
     _player_hit(player, bullet) {
-   
+
         bullet.kill();
         player.body.velocity.x = bullet.body.velocity.x / 16;
         player.body.velocity.y = bullet.body.velocity.y / 16;
         this.explosion.x = player.x;
         this.explosion.y = player.y;
         this.explosion.on = true;
+         this.game.camera.shake(0.06, 20);
+        this.userInterface._updateDamage(10);
         this.game.time.events.add(Phaser.Timer.SECOND * 0.3, this._endExplosion, this);
+
+        if (this.userInterface.health < 0) {
+            this.player.alive = false;
+            this._laserPointer.alpha = 0.0;
+            this.player._playerDeath();
+        }
+
     }
     _endExplosion() {
         this.explosion.on = false;
@@ -122,11 +133,12 @@ class SimpleLevel extends Phaser.State {
         this.explosion.on = false;
     }
 
+
     _checkCollision() {
         this.game.physics.arcade.collide(this.player, this.enemies);
         this.game.physics.arcade.collide(this.bullets, this.enemies, this._enemy_hit, null, this);
-        if(this.enemies.length > 0){
-        this.game.physics.arcade.collide(this.enemy.bullets, this.player, this._player_hit, null, this);
+        if (this.enemies.length > 0) {
+            this.game.physics.arcade.collide(this.enemy.bullets, this.player, this._player_hit, null, this);
         }
     }
     _aiUpdater() {
@@ -137,7 +149,29 @@ class SimpleLevel extends Phaser.State {
             enemy.playerY = storedY;
         }, this)
     }
-    _scoreUpdate(){}
+
+
+    _nextWave() {
+        this.enemies = this.game.add.group();
+        this.roundTimerRunning = true;
+        this.currentWave++;
+        this.userInterface._waveComplete();
+        this.game.time.events.add(Phaser.Timer.SECOND * 10, function () {
+            for (this.i = 0; this.i < this.currentWave; this.i++) {
+                var randomX = Math.random() * (900 - 20) + 20;
+                var randomY = Math.random() * (620 - 20) + 20;
+                this.enemy = new smallEnemy(this.game, randomX, randomY, 'player');
+                this.enemies.add(this.enemy);
+            }
+            this.roundTimerRunning = false;
+            this.userInterface._waveComplete();
+            this.userInterface._updateWave();
+        }, this);
+    }
+
+
+
+    _scoreUpdate() {}
     preload() {}
 
     create() {
@@ -145,28 +179,35 @@ class SimpleLevel extends Phaser.State {
         this.game.stage.smoothed = false;
         this.enemies = this.game.add.group();
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
+        this.currentWave = 0;
+        this.roundTimerRunning = false;
         this._loadLevel();
         this._addPlayer(100, 100);
         this._laserPointer();
         this._initBullets();
         this.fireRate = 120;
         this._nextFire = 0;
-        this._addEnemy();
+        //this._addEnemy();
         this._addExplosion();
         this._loadUi();
+
     }
 
     update() {
-        
-        this._aiUpdater();
-        this.overlay.x = this.player.x * 0.12 - 100;
-        this.overlay.y = this.player.y * 0.12 - 100;
-        this._checkCollision();
-        this._laserPointer.rotation = this.game.physics.arcade.angleToPointer(this.player);
-        this._laserPointer.x = this.player.x;
-        this._laserPointer.y = this.player.y;
-        if (this.game.input.activePointer.leftButton.isDown) {
-            this._fireWeapon();
+        if (this.player.alive) {
+            this._aiUpdater();
+            this.overlay.x = this.player.x * 0.12 - 100;
+            this.overlay.y = this.player.y * 0.12 - 100;
+            this._checkCollision();
+            this._laserPointer.rotation = this.game.physics.arcade.angleToPointer(this.player);
+            this._laserPointer.x = this.player.x;
+            this._laserPointer.y = this.player.y;
+            if (this.game.input.activePointer.leftButton.isDown) {
+                this._fireWeapon();
+            }
+            if (this.enemies.length <= 0 && this.roundTimerRunning === false) {
+                this._nextWave();
+            }
         }
     }
 

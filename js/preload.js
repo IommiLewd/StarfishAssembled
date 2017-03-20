@@ -27,6 +27,7 @@ class Preload extends Phaser.State {
 
         // json files :
          this.load.image('pointer', 'img/laserPointer.png');
+         this.load.image('redpointer', 'img/redlaserPointer.png');
     }
     create() {
         console.log("Preload.js:  Preload.create-> load_Level");

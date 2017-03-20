@@ -28,9 +28,9 @@ class SimpleLevel extends Phaser.State {
         this.enemy = new smallEnemy(this.game, 820, 100, 'player');
         this.enemies.add(this.enemy);
 
-
-        this.enemy = new smallEnemy(this.game, 820, 300, 'player');
-        this.enemies.add(this.enemy);
+//
+//        this.enemy = new smallEnemy(this.game, 820, 300, 'player');
+//        this.enemies.add(this.enemy);
     }
 
     _laserPointer() {
@@ -49,14 +49,6 @@ class SimpleLevel extends Phaser.State {
         bullet.kill();
         enemy.body.velocity.x = bullet.body.velocity.x / 10;
         enemy.body.velocity.y = bullet.body.velocity.y / 10;
-
-
-
-
-
-
-//        enemy.body.velocity.x = 10;
-//        enemy.body.velocity.y = 10;
         this.explosion.x = enemy.x;
         this.explosion.y = enemy.y;
         this.explosion.on = true;
@@ -107,9 +99,7 @@ class SimpleLevel extends Phaser.State {
         this.explosion.setAlpha(0.1, 1);
         this.explosion.forEach(function (particle) {
             particle.body.allowGravity = false;
-            
-            
-                    particle.animations.add('emit1', [0]);
+            particle.animations.add('emit1', [0]);
             particle.animations.add('emit2', [1]);
             particle.animations.add('emit3', [2]);
             var randSpeed = Math.random() * (4 - 0) + 0;
@@ -119,8 +109,10 @@ class SimpleLevel extends Phaser.State {
                 particle.animations.play('emit1', 30, true);
             } else if (randSpeed === 2) {
                 particle.animations.play('emit2', 30, true);
-            } else {particle.animations.play('emit3', 30, true);}
-            
+            } else {
+                particle.animations.play('emit3', 30, true);
+            }
+
         }, this);
         this.explosion.setScale(0.3, 1, 0.3, 1, 160);
         this.explosion.start(false, 160, 1);

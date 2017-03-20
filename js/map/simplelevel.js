@@ -1,10 +1,7 @@
 class SimpleLevel extends Phaser.State {
     constructor() {
         super();
-        // can be use later to identify tiles and tile_map
-        // this.name = level_name;
     }
-
     _loadLevel() {
         console.log('simplelevel.js: -> _LoadLevel fired');
         this.game.canvas.oncontextmenu = function (e) {
@@ -17,7 +14,6 @@ class SimpleLevel extends Phaser.State {
         this.background = game.add.tileSprite(0, 0, 920, 640, 'background');
         this.overlay = game.add.tileSprite(-300, -300, 1020, 740, 'Overlay');
     }
-
     _addPlayer(x, y) {
         this.player = new Player(this.game, x, y, 'player');
         this.game.camera.follow(this.player);
@@ -27,34 +23,39 @@ class SimpleLevel extends Phaser.State {
         this.enemies = this.game.add.group();
         this.enemy = new smallEnemy(this.game, 820, 100, 'player');
         this.enemies.add(this.enemy);
-
-//
-//        this.enemy = new smallEnemy(this.game, 820, 300, 'player');
-//        this.enemies.add(this.enemy);
+        this.enemy = new smallEnemy(this.game, 820, 300, 'player');
+        this.enemies.add(this.enemy);
     }
 
     _laserPointer() {
         this._laserPointer = this.game.add.tileSprite(0, 0, 1100, 0.5, 'pointer');
         this._laserPointer.anchor.setTo(0.0, 0.5);
-        this._laserPointer.alpha = 0.7;
+        this._laserPointer.alpha = 0.5;
     }
 
     _loadUi() {
         this.userInterface = new UserInterface(this.game);
     }
-
-
     _enemy_hit(bullet, enemy) {
         console.log('enemyHit!');
         bullet.kill();
-        enemy.body.velocity.x = bullet.body.velocity.x / 10;
-        enemy.body.velocity.y = bullet.body.velocity.y / 10;
+        enemy.body.velocity.x = bullet.body.velocity.x / 16;
+        enemy.body.velocity.y = bullet.body.velocity.y / 16;
         this.explosion.x = enemy.x;
         this.explosion.y = enemy.y;
         this.explosion.on = true;
         this.game.time.events.add(Phaser.Timer.SECOND * 0.3, this._endExplosion, this);
     }
-
+    _player_hit(player, bullet) {
+        console.log('player Hit!');
+        bullet.kill();
+        player.body.velocity.x = bullet.body.velocity.x / 16;
+        player.body.velocity.y = bullet.body.velocity.y / 16;
+        this.explosion.x = player.x;
+        this.explosion.y = player.y;
+        this.explosion.on = true;
+        this.game.time.events.add(Phaser.Timer.SECOND * 0.3, this._endExplosion, this);
+    }
     _endExplosion() {
         this.explosion.on = false;
     }
@@ -69,7 +70,6 @@ class SimpleLevel extends Phaser.State {
             this.game.physics.arcade.velocityFromAngle(this._laserPointer.angle, 1100, this.bullet.body.velocity);
             this.bullet.angle = this._laserPointer.angle;
             this.bullet.bringToTop();
-
             this.bullets.add(this.bullet);
         }
     }
@@ -104,7 +104,6 @@ class SimpleLevel extends Phaser.State {
             particle.animations.add('emit3', [2]);
             var randSpeed = Math.random() * (4 - 0) + 0;
             var randSpeed = Math.floor(randSpeed);
-
             if (randSpeed === 1) {
                 particle.animations.play('emit1', 30, true);
             } else if (randSpeed === 2) {
@@ -122,6 +121,7 @@ class SimpleLevel extends Phaser.State {
     _checkCollision() {
         this.game.physics.arcade.collide(this.player, this.enemies);
         this.game.physics.arcade.collide(this.bullets, this.enemies, this._enemy_hit, null, this);
+        this.game.physics.arcade.collide(this.enemy.bullets, this.player, this._player_hit, null, this);
 
     }
     _aiUpdater() {
@@ -131,10 +131,6 @@ class SimpleLevel extends Phaser.State {
             enemy.playerX = storedX;
             enemy.playerY = storedY;
         }, this)
-
-
-        //          this.enemy.playerX = this.player.x;
-        //            this.enemy.playerY = this.player.y;
     }
     preload() {}
 
@@ -157,12 +153,6 @@ class SimpleLevel extends Phaser.State {
         this.overlay.x = this.player.x * 0.12 - 100;
         this.overlay.y = this.player.y * 0.12 - 100;
         this._checkCollision();
-
-        //enemyAI updater
-
-
-
-
         this._laserPointer.rotation = this.game.physics.arcade.angleToPointer(this.player);
         this._laserPointer.x = this.player.x;
         this._laserPointer.y = this.player.y;

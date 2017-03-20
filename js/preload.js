@@ -9,10 +9,7 @@ class Preload extends Phaser.State {
         this.load.image('bullet', 'img/bullet2.png');
         this.load.image('gun', 'img/gun.png');
         this.load.image('statusUi', 'img/Ui/statusUi.png');
-        //this.load.image('pointer', 'img/pointer.png');
         this.load.image('flame', 'img/flame.png');
-       // this.load.image('blueFlame', 'img/blueFlame.png');
-       // this.load.image('background', 'img/tileableBackground.jpg');
         this.load.image('background', 'img/testBackground.png');
         this.load.image('Overlay', 'img/testOverlay.png');
         this.load.spritesheet('blueFlame', 'img/blueFlameSpritesheet.png', 10, 10, 3);
@@ -25,7 +22,7 @@ class Preload extends Phaser.State {
         this.load.script('smallEnemy', 'js/entity/smallEnemy.js');
         this.load.script('UserInterface', 'js/entity/userInterface.js');
 
-        // json files :
+        // Pointers :
          this.load.image('pointer', 'img/laserPointer.png');
          this.load.image('redpointer', 'img/redlaserPointer.png');
     }

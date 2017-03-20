@@ -7,8 +7,8 @@ class smallEnemy extends Phaser.Sprite {
         this.anchor.setTo(0.5, 0.5);
         this.body.drag.set(0.5);
         this._addEmitter();
-        var randTurn = Math.random() * (2.5 - 1.5) + 1.5;
-        var randSpeed = Math.random() * (180 - 120) + 120;
+        var randTurn = Math.random() * (2.0 - 1.5) + 1.5;
+        var randSpeed = Math.random() * (140 - 120) + 120;
         this.SPEED = randSpeed; // missile speed pixels/second
         this.TURN_RATE = randTurn; // turn rate in degrees/frame
         this.playerX = 100;
@@ -17,9 +17,27 @@ class smallEnemy extends Phaser.Sprite {
         this.body.setSize(this.width - 8, this.width - 8, 8, 8);
         this._addLaser();
         this._initBullets();
-        this.fireRate = 620;
+        this.fireRate = 420;
         this._nextFire = 0;
+        this.alive = true;
+        this.health = 100;
+        
 
+    }
+
+
+    _damageTaken(damage) {
+
+        this.health -= damage;
+        console.log('target is hit! Hp left is: ' + this.health);
+        if (this.health < 0) {
+            console.log('target is dead!');
+            this.alive = false;
+            this.emitter.on = false;
+            this._deathEmitter();
+            this.game.time.events.add(Phaser.Timer.SECOND * 4, function(){this.kill();}, this);
+            
+        }
     }
 
 
@@ -28,16 +46,16 @@ class smallEnemy extends Phaser.Sprite {
     _fireWeapon() {
         this.bullet;
         //if (this.game.time.now > this._nextFire) {
-            this._nextFire = this.game.time.now + this.fireRate;
-            this.bullet = this.bullets.getFirstDead();
-            this.bullet.reset(this.x, this.y);
-            this.game.camera.shake(0.004, 40);
-            this.game.physics.arcade.velocityFromAngle(this.angle, 1100, this.bullet.body.velocity);
-            this.bullet.angle = this.angle;
-            this.bullet.bringToTop();
+        this._nextFire = this.game.time.now + this.fireRate;
+        this.bullet = this.bullets.getFirstDead();
+        this.bullet.reset(this.x, this.y);
+        this.game.camera.shake(0.004, 40);
+        this.game.physics.arcade.velocityFromAngle(this.angle, 900, this.bullet.body.velocity);
+        this.bullet.angle = this.angle;
+        this.bullet.bringToTop();
 
-            this.bullets.add(this.bullet);
-      //  }
+        this.bullets.add(this.bullet);
+        //  }
     }
 
     _initBullets() {
@@ -56,7 +74,7 @@ class smallEnemy extends Phaser.Sprite {
     }
 
     _addLaser() {
-        this._targetReticule = this.game.add.tileSprite(0, 0, 1100, 0.5, 'redpointer');
+        this._targetReticule = this.game.add.tileSprite(0, 0, 800, 0.5, 'redpointer');
         this._targetReticule.anchor.setTo(0.0, 0.5);
         this._targetReticule.alpha = 0.0;
     }
@@ -81,41 +99,82 @@ class smallEnemy extends Phaser.Sprite {
         this.emitter.y = 0;
         this.emitter.x = -6;
     }
+    
+    
+    
+    
+    
+    
+        _deathEmitter() {
+        this.deathEmitter = this.game.add.emitter(0, 0, 0);
+            this.addChild(this.deathEmitter);
+        this.deathEmitter.width = 0;
+        this.deathEmitter.makeParticles('flame');
+       // this.deathEmitter.minParticleSpeed.setTo(-100, -100);
+       // this.deathEmitter.maxParticleSpeed.setTo(100, 100);
+        this.deathEmitter.setRotation(0, 190);
+        this.deathEmitter.setAlpha(0.1, 1);
+        this.deathEmitter.forEach(function (particle) {
+            particle.body.allowGravity = false;
+            
+//            particle.animations.add('emit1', [0]);
+//            particle.animations.add('emit2', [1]);
+//            particle.animations.add('emit3', [2]);
+//            var randSpeed = Math.random() * (4 - 0) + 0;
+//            var randSpeed = Math.floor(randSpeed);
+//            if (randSpeed === 1) {
+//                particle.animations.play('emit1', 30, true);
+//            } else if (randSpeed === 2) {
+//                particle.animations.play('emit2', 30, true);
+//            } else {
+//                particle.animations.play('emit3', 30, true);
+            
+
+        }, this);
+        this.deathEmitter.setScale(0.3, 2.5, 0.3, 2.5, 400);
+        //this.deathEmitter.start(false, 800, 100);
+        this.deathEmitter.start(false, 400, 200);
+        this.deathEmitter.on = true;
+    }
 
     update() {
-        this._targetReticule.x = this.x;
-        this._targetReticule.y = this.y;
-        var storedAngle = this.game.physics.arcade.angleToXY(this._targetReticule, this.playerX, this.playerY);
-        this._targetReticule.rotation = storedAngle;
-        var storedShipAngle = Math.abs(this.rotation);
-        var storedPointerAngle = Math.abs(this._targetReticule.rotation);
-        if (storedPointerAngle < storedShipAngle + 0.3 && storedPointerAngle > storedShipAngle - 0.3 && this.game.time.now > this._nextFire) {
-            console.log('enemyFiring!');
-            this._fireWeapon();
-        }
+        if (this.alive) {
+            this._targetReticule.x = this.x;
+            this._targetReticule.y = this.y;
+            var storedAngle = this.game.physics.arcade.angleToXY(this._targetReticule, this.playerX, this.playerY);
+            this._targetReticule.rotation = storedAngle;
+            var storedShipAngle = Math.abs(this.rotation);
+            var storedPointerAngle = Math.abs(this._targetReticule.rotation);
+            if (storedPointerAngle < storedShipAngle + 0.2 && storedPointerAngle > storedShipAngle - 0.2 && this.game.time.now > this._nextFire) {
+                this._fireWeapon();
+            }
 
-        this.targetDistance = this.game.math.distance(this.x, this.y, this.playerX, this.playerY);
-        var targetAngle = this.game.math.angleBetween(
-            this.x, this.y,
-            this.playerX, this.playerY
-        );
+            this.targetDistance = this.game.math.distance(this.x, this.y, this.playerX, this.playerY);
+            var targetAngle = this.game.math.angleBetween(
+                this.x, this.y,
+                this.playerX, this.playerY
+            );
 
-        var delta = targetAngle - this.rotation;
-        if (delta > Math.PI) delta -= Math.PI * 2;
-        if (delta < -Math.PI) delta += Math.PI * 2;
+            var delta = targetAngle - this.rotation;
+            if (delta > Math.PI) delta -= Math.PI * 2;
+            if (delta < -Math.PI) delta += Math.PI * 2;
 
 
-        if (this.targetDistance > 120) {
-            this.game.physics.arcade.accelerationFromRotation(this.rotation, this.SPEED, this.body.acceleration);
-            this.emitter.on = true;
+            if (this.targetDistance > 120) {
+                this.game.physics.arcade.accelerationFromRotation(this.rotation, this.SPEED, this.body.acceleration);
+                this.emitter.on = true;
+            } else {
+                this.emitter.on = false;
+            }
+
+            if (delta > 0) {
+                this.angle += this.TURN_RATE;
+            } else {
+                this.angle -= this.TURN_RATE;
+            }
+
         } else {
-            this.emitter.on = false;
-        }
-
-        if (delta > 0) {
-            this.angle += this.TURN_RATE;
-        } else {
-            this.angle -= this.TURN_RATE;
+            this.angle += 2;
         }
 
     }

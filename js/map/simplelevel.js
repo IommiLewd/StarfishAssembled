@@ -37,8 +37,9 @@ class SimpleLevel extends Phaser.State {
         this.userInterface = new UserInterface(this.game);
     }
     _enemy_hit(bullet, enemy) {
-        console.log('enemyHit!');
+       
         bullet.kill();
+        enemy._damageTaken(16);
         enemy.body.velocity.x = bullet.body.velocity.x / 16;
         enemy.body.velocity.y = bullet.body.velocity.y / 16;
         this.explosion.x = enemy.x;
@@ -47,7 +48,7 @@ class SimpleLevel extends Phaser.State {
         this.game.time.events.add(Phaser.Timer.SECOND * 0.3, this._endExplosion, this);
     }
     _player_hit(player, bullet) {
-        console.log('player Hit!');
+   
         bullet.kill();
         player.body.velocity.x = bullet.body.velocity.x / 16;
         player.body.velocity.y = bullet.body.velocity.y / 16;
@@ -121,8 +122,9 @@ class SimpleLevel extends Phaser.State {
     _checkCollision() {
         this.game.physics.arcade.collide(this.player, this.enemies);
         this.game.physics.arcade.collide(this.bullets, this.enemies, this._enemy_hit, null, this);
+        if(this.enemies.length > 0){
         this.game.physics.arcade.collide(this.enemy.bullets, this.player, this._player_hit, null, this);
-
+        }
     }
     _aiUpdater() {
         var storedX = this.player.x;
@@ -135,6 +137,8 @@ class SimpleLevel extends Phaser.State {
     preload() {}
 
     create() {
+        this.game.stage.smoothed = false;
+        this.enemies = this.game.add.group();
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this._loadLevel();
         this._addPlayer(100, 100);
@@ -144,11 +148,11 @@ class SimpleLevel extends Phaser.State {
         this._nextFire = 0;
         this._addEnemy();
         this._addExplosion();
-        //this._loadUi();
+        this._loadUi();
     }
 
     update() {
-
+        
         this._aiUpdater();
         this.overlay.x = this.player.x * 0.12 - 100;
         this.overlay.y = this.player.y * 0.12 - 100;

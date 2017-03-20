@@ -1,14 +1,15 @@
 class Preload extends Phaser.State {
     preload() {
 
-        //this.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
+        this.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
 
         // Images :
    
         this.load.image('player', 'img/Badger.png');
         this.load.image('bullet', 'img/bullet2.png');
         this.load.image('gun', 'img/gun.png');
-        this.load.image('statusUi', 'img/Ui/statusUi.png');
+        
+        
         this.load.image('flame', 'img/flame.png');
         this.load.image('background', 'img/testBackground.png');
         this.load.image('Overlay', 'img/testOverlay.png');
@@ -25,6 +26,11 @@ class Preload extends Phaser.State {
         // Pointers :
          this.load.image('pointer', 'img/laserPointer.png');
          this.load.image('redpointer', 'img/redlaserPointer.png');
+        
+        //Ui stuff
+        this.load.image('statusUi', 'img/Ui/statusUi.png');
+        this.load.image('redPixel', 'img/Ui/redPixel.png');
+        this.load.image('bluePixel', 'img/Ui/bluePixel.png');
     }
     create() {
         console.log("Preload.js:  Preload.create-> load_Level");

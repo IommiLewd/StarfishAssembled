@@ -11,6 +11,7 @@ class Player extends Phaser.Sprite {
         this.SPEED = 220; // missile speed pixels/second
         this.TURN_RATE = 3; // turn rate in degrees/frame
         this.body.bounce.set(0.4);
+        this.alive = true;
     }
 
     _addEmitter() {
@@ -23,12 +24,10 @@ class Player extends Phaser.Sprite {
         this.emitter.maxParticleScale = 8.9;
         this.emitter.setRotation(0, 360);
         //this.emitter.setAlpha(0.1, 0.8);
-        this.emitter.setAlpha(1, 0.1, 300);
+        this.emitter.setAlpha(1, 0.1, 250);
         this.emitter.forEach(function (particle) {
             
-            
             //Yay, totally works and is cool. Can i reduce this to 3lines ov code?
-            
             particle.animations.add('emit1', [0]);
             particle.animations.add('emit2', [1]);
             particle.animations.add('emit3', [2]);
@@ -41,15 +40,13 @@ class Player extends Phaser.Sprite {
                 particle.animations.play('emit2', 30, true);
             } else {particle.animations.play('emit3', 30, true);}
             
-            
         }, this);
-        this.emitter.setScale(0.3, 2, 0.3, 2, 200);
-        this.emitter.start(false, 200, 1);
+        this.emitter.setScale(0.3, 2, 0.3, 2, 250);
+        this.emitter.start(false, 250, 1);
         this.addChild(this.emitter);
         this.emitter.on = false;
         this.emitter.y = 0;
         this.emitter.x = -6;
-
     }
 
 
@@ -57,13 +54,16 @@ class Player extends Phaser.Sprite {
     _addGun() {
         this.gun = this.game.add.image(0, 0, 'gun');
         this.gun.anchor.setTo(0.5);
-        //this.addChild(this.gun);
+    }
+    
+    _death(){
+        
     }
 
     update() {
+        if(this.alive){
         this.gun.x = this.x;
         this.gun.y = this.y;
-        //this.game.physics.arcade.angleToPointer(this.gun);
         this.gun.rotation = this.game.physics.arcade.angleToPointer(this);
         var targetAngle = this.game.math.angleBetween(
             this.x, this.y,
@@ -86,6 +86,9 @@ class Player extends Phaser.Sprite {
         } else {
             this.body.acceleration.set(0);
             this.emitter.on = false;
+        }} else {
+            this.angle += 3;
+            
         }
 
 

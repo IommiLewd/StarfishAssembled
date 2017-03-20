@@ -5,7 +5,7 @@ class Player extends Phaser.Sprite {
         game.physics.arcade.enable(this);
         this.body.collideWorldBounds = true;
         this.anchor.setTo(0.5, 0.5);
-        this.body.drag.set(0.5);
+        this.body.drag.set(10);
         this._addEmitter();
         this._addGun();
         this.SPEED = 220; // missile speed pixels/second

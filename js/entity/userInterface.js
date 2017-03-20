@@ -5,16 +5,22 @@ class UserInterface extends Phaser.Sprite {
         game.physics.arcade.enable(this);
         this.body.collideWorldBounds = true;
         this.anchor.setTo(0.5, 0.5);
+        this.currentWave = 0;
         this.score = 0;
         this._loadElements();
-        this._updateScore(20);
+
 
 
 
     }
     _updateScore(score) {
         this.score += score;
-        this.scoreCounter.setText('Score: ' + this.score)
+        this.scoreCounter.setText('Score: ' + this.score);
+    }
+    
+    _updateWave(){
+        this.currentWave + 1;
+        this.waveCounter.setText('Wave: ' + this.currentWave);
     }
 
     _loadElements() {
@@ -26,6 +32,11 @@ class UserInterface extends Phaser.Sprite {
         this.scoreCounter.font = 'Press Start 2P';
         this.scoreCounter.fontSize = 8;
         this.scoreCounter.addColor("#FFFFFF", 0); //red
+        
+        this.waveCounter = this.game.add.text(4, 618, 'Wave:  ' + this.currentWave);
+        this.waveCounter.font = 'Press Start 2P';
+        this.waveCounter.fontSize = 8;
+        this.waveCounter.addColor("#FFFFFF", 0); //red
 
     }
 
@@ -34,3 +45,18 @@ class UserInterface extends Phaser.Sprite {
 
     }
 }
+
+
+
+
+
+
+/*
+
+
+this.testSignal = this.fish.events.fishBirth.add(this._fishBirthing, this, 0, this.locationX, this.locationY);
+
+this.events.fishBirth = new Phaser.Signal();
+this.events.fishBirth.dispatch(this.locationX, this.locationY);
+
+*/

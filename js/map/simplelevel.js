@@ -46,6 +46,9 @@ class SimpleLevel extends Phaser.State {
         this.explosion.y = enemy.y;
         this.explosion.on = true;
         this.game.time.events.add(Phaser.Timer.SECOND * 0.3, this._endExplosion, this);
+        if(enemy.health < 16 && enemy.alive){
+            this.userInterface._updateScore(20);
+        }
     }
     _player_hit(player, bullet) {
    
@@ -134,9 +137,11 @@ class SimpleLevel extends Phaser.State {
             enemy.playerY = storedY;
         }, this)
     }
+    _scoreUpdate(){}
     preload() {}
 
     create() {
+
         this.game.stage.smoothed = false;
         this.enemies = this.game.add.group();
         this.game.physics.startSystem(Phaser.Physics.ARCADE);

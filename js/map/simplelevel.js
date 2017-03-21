@@ -64,12 +64,20 @@ class SimpleLevel extends Phaser.State {
         this.userInterface._updateDamage(10);
         this.game.time.events.add(Phaser.Timer.SECOND * 0.3, this._endExplosion, this);
 
-        if (this.userInterface.health < 0) {
+        if (this.userInterface.health < 0 && this.player.alive) {
             this.player.alive = false;
             this._laserPointer.alpha = 0.0;
-            this.player._playerDeath();
+            var deathTimer = Math.random() * (9 - 5) + 5;
+            this.player._playerDeath(deathTimer);
+            this.game.time.events.add(Phaser.Timer.SECOND * deathTimer, this._gameOver, this);
+            
         }
 
+    }
+    
+    _gameOver(){
+        this.game.paused = true;
+        this.userInterface._gameOverMenu();
     }
     _endExplosion() {
         this.explosion.on = false;
@@ -206,7 +214,7 @@ class SimpleLevel extends Phaser.State {
                 this._fireWeapon();
             }
             if (this.enemies.length <= 0 && this.roundTimerRunning === false) {
-                this._nextWave();
+             this._nextWave();
             }
         }
     }

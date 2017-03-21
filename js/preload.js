@@ -32,6 +32,9 @@ class Preload extends Phaser.State {
         this.load.image('redPixel', 'img/Ui/redPixel.png');
         this.load.image('bluePixel', 'img/Ui/bluePixel.png');
         this.load.image('gameOverMenu', 'img/Ui/gameOverMenu.png');
+        //this.load.image('restartUp', 'img/Ui/restartGameUp.png');
+        this.load.spritesheet('restartButton', 'img/Ui/GOrestart.png', 314, 46, 2);
+        this.load.spritesheet('menuButton', 'img/Ui/GOmenu.png', 282, 46, 2);
     }
     create() {
         console.log("Preload.js:  Preload.create-> load_Level");

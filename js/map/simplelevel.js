@@ -28,11 +28,6 @@ class SimpleLevel extends Phaser.State {
     }
 
 
-    _laserPointer() {
-        this._laserPointer = this.game.add.tileSprite(0, 0, 1100, 0.5, 'pointer');
-        this._laserPointer.anchor.setTo(0.0, 0.5);
-        this._laserPointer.alpha = 0.5;
-    }
 
     _loadUi() {
         this.userInterface = new UserInterface(this.game);
@@ -76,7 +71,8 @@ class SimpleLevel extends Phaser.State {
     }
     
     _gameOver(){
-        this.game.paused = true;
+        this.game.world.removeAll();
+        //this.game.paused = true;
         this.userInterface._gameOverMenu();
     }
     _endExplosion() {
@@ -178,6 +174,13 @@ class SimpleLevel extends Phaser.State {
     }
 
 
+    
+    _laserPointer() {
+        console.log('pointer openened?!ass');
+        this._laserPointer = this.game.add.tileSprite(0, 0, 1100, 0.5, 'pointer');
+        this._laserPointer.anchor.setTo(0.0, 0.5);
+        this._laserPointer.alpha = 0.5;
+    }
 
     _scoreUpdate() {}
     preload() {}
@@ -191,13 +194,16 @@ class SimpleLevel extends Phaser.State {
         this.roundTimerRunning = false;
         this._loadLevel();
         this._addPlayer(100, 100);
-        this._laserPointer();
+        console.log('playerAdded!');
+        
         this._initBullets();
         this.fireRate = 120;
         this._nextFire = 0;
         //this._addEnemy();
         this._addExplosion();
         this._loadUi();
+         console.log('pointer openened?!');
+        //this._laserPointer();
 
     }
 
@@ -214,6 +220,7 @@ class SimpleLevel extends Phaser.State {
                 this._fireWeapon();
             }
             if (this.enemies.length <= 0 && this.roundTimerRunning === false) {
+                
              this._nextWave();
             }
         }

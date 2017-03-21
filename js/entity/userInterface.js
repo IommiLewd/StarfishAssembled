@@ -12,7 +12,7 @@ class UserInterface extends Phaser.Sprite {
         this.health = 100;
         this.shield = 50;
         this.regenerating = 0;
-        //this._gameOverMenu();
+        this._gameOverMenu();
     }
 
     _waveComplete() {
@@ -29,18 +29,19 @@ class UserInterface extends Phaser.Sprite {
         }
     }
 
-    _updateDamage(damage){
+    _updateDamage(damage) {
         this.regenerating = 12;
-        if(this.shield > 0){
+        if (this.shield > 0) {
             this.shield -= damage;
-        }else {
-            
-            if(this.health > -5){
-        this.health -= damage;
-        }}
+        } else {
+
+            if (this.health > -5) {
+                this.health -= damage;
+            }
+        }
         this.healthBar.width = this.health / 100 * 162;
         this.shieldBar.width = this.shield / 50 * 162;
-        if(this.health < 0){
+        if (this.health < 0) {
             console.log('you are dead!!! Bang!!');
             this.healthBar.alpha = 0.0;
             this.shieldBar.alpha = 0.0;
@@ -83,51 +84,58 @@ class UserInterface extends Phaser.Sprite {
             fill: '#ffffff'
         });
 
-   
+
         this.NextWaveText.alpha = 0.0;
         this.NextWaveInText.alpha = 0.0;
         this.TextTimer.alpha = 0.0;
 
     }
-    
-    _gameOverMenu(){
-        
+
+    _gameOverMenu() {
+
         this.gameOverBackground = this.game.add.sprite(300, 80, 'gameOverMenu');
-               this.endScore = this.game.add.text(474, 220, this.score, {
+        this.endScore = this.game.add.text(474, 220, this.score, {
             font: "24px Press Start 2P",
             fill: '#f27519',
-                   boundsAlignH: "center"
+            boundsAlignH: "center"
         });
-        
-                this.endWave = this.game.add.text(474, 294, this.currentWave, {
+
+        this.endWave = this.game.add.text(474, 294, this.currentWave, {
             font: "24px Press Start 2P",
             fill: '#f27519'
         });
         this.endWave.anchor.setTo(0.5);
-       this.endScore.anchor.setTo(0.5);
+        this.endScore.anchor.setTo(0.5);
+        //this.restartButton = this.game.add.sprite(306, 352, 'restartUp');
+        this.restartButton = this.game.add.button(306, 352, 'restartButton', function () {
+            //game.state.start(game.state.current);
+            this.game.state.start("SimpleLevel", true, false);
+        }, this, 2, 1, 0);
+        this.menuButton = this.game.add.button(336, 402, 'menuButton', function () {}, this, 2, 1, 0);
     }
 
 
     update() {
-        if(this.regenerating > 0){
+        if (this.regenerating > 0) {
             console.log('regenerating is: ' + this.regenerating);
             this.regenerating -= 0.1;
         } else {
-            
-            if(this.shield < 50){
-            this.shield += 0.5;
-            this.shieldBar.width = this.shield / 50 * 162;
-            
-        }}
-        
-//                if(this.regenerating && this.shield < 50){
-//            this.shield += 0.5;
-//            this.shieldBar.width = this.shield / 50 * 162;
-//        }
-        
-//        if(this.regenerating && this.shield < 50){
-//            this.shield += 0.5;
-//            this.shieldBar.width = this.shield / 50 * 162;
-//        }
+
+            if (this.shield < 50) {
+                this.shield += 0.5;
+                this.shieldBar.width = this.shield / 50 * 162;
+
+            }
+        }
+
+        //                if(this.regenerating && this.shield < 50){
+        //            this.shield += 0.5;
+        //            this.shieldBar.width = this.shield / 50 * 162;
+        //        }
+
+        //        if(this.regenerating && this.shield < 50){
+        //            this.shield += 0.5;
+        //            this.shieldBar.width = this.shield / 50 * 162;
+        //        }
     }
 }
